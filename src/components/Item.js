@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const Item = () => {
-    const [selectedAnswer, setSelectedAnswer] = useState({});
+    const [selectedAnswers, setSelectedAnswers] = useState({});
 
     const riddles = [
         {
@@ -51,11 +51,11 @@ const Item = () => {
     ];
 
     const handleAnswerClick = (riddleId, selectedOption) => {
-        setSelectedAnswer({ ...selectedAnswer, [riddleId]: selectedOption });
+        setSelectedAnswers({ ...selectedAnswers, [riddleId]: selectedOption });
     };
 
     const checkAnswer = (riddleId, selectedOption) => {
-        return selectedAnswer[riddleId] === selectedOption;
+        return selectedAnswers[riddleId] === selectedOption;
     };
 
     return (
@@ -79,12 +79,22 @@ const Item = () => {
                 }}>
                     <p style={{ fontWeight: 'bold', marginBottom: '10px' }}>{riddle.description}</p>
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
-                        <li style={{ marginBottom: '5px', cursor: 'pointer', border: '1px solid black', borderRadius: '5px', padding: '5px', backgroundColor: selectedAnswer[riddle.id] === 1 ? '#f0f0f0' : 'inherit' }} onClick={() => handleAnswerClick(riddle.id, 1)}>{riddle.option1}</li>
-                        <li style={{ marginBottom: '5px', cursor: 'pointer', border: '1px solid black', borderRadius: '5px', padding: '5px', backgroundColor: selectedAnswer[riddle.id] === 2 ? '#f0f0f0' : 'inherit' }} onClick={() => handleAnswerClick(riddle.id, 2)}>{riddle.option2}</li>
-                        <li style={{ marginBottom: '5px', cursor: 'pointer', border: '1px solid black', borderRadius: '5px', padding: '5px', backgroundColor: selectedAnswer[riddle.id] === 3 ? '#f0f0f0' : 'inherit' }} onClick={() => handleAnswerClick(riddle.id, 3)}>{riddle.option3}</li>
-                        {riddle.option4 && <li style={{ marginBottom: '5px', cursor: 'pointer', border: '1px solid black', borderRadius: '5px', padding: '5px', backgroundColor: selectedAnswer[riddle.id] === 4 ? '#f0f0f0' : 'inherit' }} onClick={() => handleAnswerClick(riddle.id, 4)}>{riddle.option4}</li>}
+                        {[1, 2, 3, 4].map(optionId => (
+                            riddle[`option${optionId}`] && (
+                                <li key={optionId} style={{ 
+                                    marginBottom: '5px', 
+                                    cursor: 'pointer', 
+                                    border: '1px solid black', 
+                                    borderRadius: '5px', 
+                                    padding: '5px', 
+                                    backgroundColor: selectedAnswers[riddle.id] === optionId ? '#f0f0f0' : 'inherit' 
+                                }} onClick={() => handleAnswerClick(riddle.id, optionId)}>
+                                    {riddle[`option${optionId}`]}
+                                </li>
+                            )
+                        ))}
                     </ul>
-                    {selectedAnswer[riddle.id] && (
+                    {selectedAnswers[riddle.id] && (
                         <p style={{ color: checkAnswer(riddle.id, riddle.correct) ? 'green' : 'red' }}>
                             {checkAnswer(riddle.id, riddle.correct) ? 'Правильно!' : 'Неправильно!'}
                         </p>
